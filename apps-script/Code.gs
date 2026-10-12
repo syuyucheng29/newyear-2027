@@ -1,9 +1,11 @@
+/** @OnlyCurrentDoc */
 // 跨年包棟調查 — Google Apps Script 後端
 // 部署方式見 README.md。資料存在綁定試算表的「responses」工作表。
 
 const SHEET_NAME = 'responses';
 const HEADERS = ['name', 'count', 'choices', 'slots', 'message', 'updatedAt'];
 const DEADLINE = new Date('2026-10-31T23:59:59+08:00');
+const MAX_ROWS = 200; // 防灌爆：超過這個筆數就不收新名字，舊名字仍可修改
 
 const HOUSES = ['haiyang', 'longpan', 'shuwu'];
 const OTHER_CHOICES = ['nobook', 'busy'];
@@ -34,6 +36,11 @@ function readAll_() {
     message: String(r[4]),
     updatedAt: r[5] instanceof Date ? r[5].toISOString() : String(r[5]),
   }));
+}
+
+// 避免使用者輸入被試算表當成公式執行
+function safeText_(s) {
+  return /^[=+\-@]/.test(s) ? "'" + s : s;
 }
 
 function json_(obj) {
@@ -72,10 +79,11 @@ function doPost(e) {
   lock.waitLock(10000);
   try {
     const sheet = getSheet_();
-    const row = [name, count, choices.join(','), slots.join(','), message, new Date()];
+    const row = [safeText_(name), count, choices.join(','), slots.join(','), safeText_(message), new Date()];
     const names = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues().map(r => String(r[0]).trim().toLowerCase());
     const idx = names.indexOf(name.toLowerCase());
     if (idx > 0) sheet.getRange(idx + 1, 1, 1, row.length).setValues([row]);
+    else if (sheet.getLastRow() - 1 >= MAX_ROWS) return json_({ ok: false, error: '回覆數已達上限，請聯絡主辦人' });
     else sheet.appendRow(row);
   } finally {
     lock.releaseLock();
