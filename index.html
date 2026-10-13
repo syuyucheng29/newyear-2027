@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>2027 跨年包棟</title>
-<meta name="description" content="2027 跨年包棟調查：9 間候選民宿比較、排序投票與時段調查">
+<meta name="description" content="2027 跨年包棟調查：8 間候選民宿比較、排序投票與住宿天數調查">
 <style>
 :root {
   --bg: #f7f4ee;
@@ -21,11 +21,6 @@
   --ok-soft: #e1efe3;
   --warn: #9a6a12;
   --warn-soft: #f7ecd2;
-  --heat-0: #f1ece3;
-  --heat-1: #f2d4c4;
-  --heat-2: #e7a988;
-  --heat-3: #d57a52;
-  --heat-4: #c2562f;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(60, 40, 20, .06), 0 4px 16px rgba(60, 40, 20, .06);
 }
@@ -44,11 +39,6 @@
     --ok-soft: #223427;
     --warn: #e2b55c;
     --warn-soft: #3a3020;
-    --heat-0: #2d2924;
-    --heat-1: #4a3226;
-    --heat-2: #7a4630;
-    --heat-3: #b0603c;
-    --heat-4: #e57e55;
     --shadow: none;
   }
 }
@@ -66,11 +56,6 @@
   --ok-soft: #223427;
   --warn: #e2b55c;
   --warn-soft: #3a3020;
-  --heat-0: #2d2924;
-  --heat-1: #4a3226;
-  --heat-2: #7a4630;
-  --heat-3: #b0603c;
-  --heat-4: #e57e55;
   --shadow: none;
 }
 
@@ -85,6 +70,7 @@ body {
   line-height: 1.6;
 }
 a { color: var(--accent); }
+[hidden] { display: none !important; }
 .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
 
 header.hero { padding: 40px 0 24px; }
@@ -99,11 +85,11 @@ header.hero { padding: 40px 0 24px; }
 }
 .chip.accent { background: var(--accent-soft); border-color: transparent; color: var(--accent); font-weight: 600; }
 nav.jump { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
-nav.jump a {
+nav.jump a, a.btn {
   text-decoration: none; padding: 8px 16px; border-radius: 10px;
   background: var(--accent); color: var(--accent-text); font-weight: 600; font-size: 15px;
 }
-nav.jump a.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+nav.jump a.ghost, a.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
 
 section { padding: 28px 0; }
 h2 { font-size: 22px; margin: 0 0 4px; }
@@ -114,9 +100,10 @@ h2 { font-size: 22px; margin: 0 0 4px; }
 .houses { display: grid; column-gap: 18px; row-gap: 0; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 .house {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-  box-shadow: var(--shadow); overflow: hidden;
+  box-shadow: var(--shadow); overflow: hidden; scroll-margin-top: 16px;
   display: grid; grid-row: span 13; grid-template-rows: subgrid; row-gap: 0; margin-bottom: 18px;
 }
+.house:target { outline: 2px solid var(--accent); outline-offset: 2px; }
 .house > :not(.photo) { margin: 0 18px; padding-top: 12px; }
 .house > .head { padding-top: 16px; }
 .house > .links { padding: 14px 0 18px; align-self: end; }
@@ -140,17 +127,14 @@ h2 { font-size: 22px; margin: 0 0 4px; }
 .tag { font-size: 13px; padding: 2px 10px; border-radius: 999px; background: var(--surface-2); white-space: nowrap; }
 .tag.yes { background: var(--ok-soft); color: var(--ok); }
 .tag.no { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+.tag.warn { background: var(--warn-soft); color: var(--warn); font-weight: 600; }
+.tag.rate { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 .links { display: flex; gap: 8px; }
 .links a {
   flex: 1; text-align: center; text-decoration: none; padding: 9px 0; border-radius: 10px;
   border: 1px solid var(--line); color: var(--text); font-size: 14px; font-weight: 600;
 }
 .links a:hover { border-color: var(--accent); color: var(--accent); }
-.note {
-  margin-top: 16px; padding: 12px 16px; border-radius: 10px; background: var(--warn-soft);
-  color: var(--text); font-size: 14px;
-}
-.note b { color: var(--warn); }
 
 /* form */
 .card {
@@ -161,6 +145,9 @@ form .field { margin-bottom: 22px; }
 form .field:last-of-type { margin-bottom: 0; }
 .label { display: block; font-weight: 600; margin-bottom: 8px; }
 .label .hint { font-weight: 400; color: var(--muted); font-size: 14px; margin-left: 6px; }
+.help { margin-top: 6px; font-size: 13px; color: var(--muted); }
+.ferr { margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--accent); }
+.ferr:empty { display: none; }
 .row2 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
 input[type=text], input[type=number], textarea {
   width: 100%; font: inherit; color: var(--text); background: var(--bg);
@@ -168,8 +155,9 @@ input[type=text], input[type=number], textarea {
 }
 input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
 textarea { min-height: 90px; resize: vertical; }
-.found { margin-top: 8px; font-size: 14px; color: var(--warn); display: none; }
-.found.show { display: block; }
+.found { margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--warn-soft); font-size: 14px; }
+.found .btns { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 2px; }
+.found .btn-text { font-weight: 600; }
 
 .opts { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .opt {
@@ -181,12 +169,13 @@ textarea { min-height: 90px; resize: vertical; }
 .opt .d { display: block; font-size: 13px; color: var(--muted); font-weight: 400; }
 .opt:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
 .opt:has(input:disabled) { opacity: .45; cursor: not-allowed; }
-.divider { grid-column: 1 / -1; height: 1px; background: var(--line); margin: 4px 0; }
-.opts.other { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.opt:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .rank-pick { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.rk-item { position: relative; }
 .rk {
-  display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; text-align: left;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; gap: 10px; padding: 10px 56px 10px 12px; border-radius: 10px; text-align: left;
   border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; cursor: pointer;
 }
 .rk .no {
@@ -201,8 +190,19 @@ textarea { min-height: 90px; resize: vertical; }
 .rk.on .no { background: var(--accent); border: none; color: var(--accent-text); }
 .rk:disabled { opacity: .45; cursor: not-allowed; }
 .rk:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rk-more { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; padding: 4px 0; }
 .rank-tools { display: flex; align-items: center; gap: 14px; margin-top: 10px; font-size: 14px; color: var(--muted); }
 .rank-tools .done { color: var(--ok); font-weight: 600; }
+.rank-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; max-width: 480px; }
+.rank-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border-radius: 10px; background: var(--accent-soft); }
+.rank-list .n { flex: none; font-weight: 700; color: var(--accent); }
+.rank-list .nm { flex: 1; min-width: 0; font-weight: 600; }
+.rank-list .nm small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+.icon-btn {
+  flex: none; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--text); font: inherit; font-size: 15px; cursor: pointer;
+}
+.icon-btn:disabled { opacity: .35; cursor: not-allowed; }
 
 .board { display: grid; gap: 8px; }
 .brow {
@@ -219,22 +219,6 @@ textarea { min-height: 90px; resize: vertical; }
 .brow .votes { font-size: 12px; color: var(--muted); margin-top: 4px; }
 h3.block .hint { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 6px; }
 
-.slots { display: grid; grid-template-columns: auto repeat(3, 1fr); gap: 6px; max-width: 460px; }
-.slots .h { text-align: center; font-size: 13px; color: var(--muted); }
-.slots .d { font-size: 14px; display: flex; align-items: center; padding-right: 6px; white-space: nowrap; }
-.slots .d small { color: var(--muted); margin-left: 4px; }
-.slot { position: relative; }
-.slot input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
-.slot span {
-  display: flex; align-items: center; justify-content: center; height: 40px; border-radius: 8px;
-  border: 1px solid var(--line); background: var(--bg); font-size: 14px; color: var(--muted);
-}
-.slot input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
-.slot input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
-.slot input:disabled + span { opacity: .4; }
-.slot input:disabled { cursor: not-allowed; }
-.slot.none span { border-style: dashed; background: transparent; }
-.slot-tools { display: flex; gap: 8px; margin-top: 10px; }
 .btn-text { font: inherit; font-size: 14px; background: none; border: none; color: var(--accent); cursor: pointer; padding: 4px 0; }
 .btn-text:disabled { opacity: .4; cursor: not-allowed; }
 
@@ -255,6 +239,7 @@ button.primary:disabled { opacity: .5; cursor: not-allowed; }
 /* results */
 .stats { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 20px; }
 .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+.stat.main { border-color: var(--accent); }
 .stat .k { font-size: 14px; color: var(--muted); }
 .stat .v { font-size: 26px; font-weight: 700; line-height: 1.2; }
 .stat .v small { font-size: 14px; font-weight: 500; color: var(--muted); }
@@ -271,14 +256,9 @@ tr:last-child td { border-bottom: none; }
 td.l, th.l { text-align: left; }
 td.name { font-weight: 600; position: sticky; left: 0; background: var(--surface); }
 th.name { position: sticky; left: 0; }
-.dot { display: inline-block; width: 14px; height: 14px; border-radius: 4px; background: var(--heat-0); vertical-align: middle; }
-.dot.on { background: var(--accent); }
-tr.heat td { font-weight: 700; }
-tr.heat td.c { color: var(--text); }
-th.day { border-left: 1px solid var(--line); }
-td.dl { border-left: 1px solid var(--line); }
 .pill { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin: 1px 2px; }
 .pill.grey { background: var(--surface-2); color: var(--muted); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
 
 .msgs { display: grid; gap: 10px; }
 .msg { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; }
@@ -302,9 +282,9 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
 
 <header class="hero">
   <h1>2027 跨年包棟</h1>
-  <p>9 間候選民宿，大家排出最想住的 5 間，再勾一下哪些時段有空。</p>
+  <p>8 間候選民宿，大家排出最想住的 1～5 間，再選希望住到哪一天。</p>
   <div class="facts">
-    <span class="chip">住宿 1/1（五）入住 → 1/4（一）退房，共 3 晚</span>
+    <span class="chip">1/1（五）入住，1/3（日）或 1/4（一）退房</span>
     <span class="chip accent" id="deadlineChip">填寫截止 10/21（三）</span>
     <span class="chip">價格查詢日 2026/10/13–14</span>
   </div>
@@ -316,7 +296,7 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
 
 <section id="houses">
   <h2>候選民宿</h2>
-  <p class="sub">價格為 Booking 上 6 人、3 晚的總價；每人每晚固定以 6 人計算。點照片可看大圖。</p>
+  <p class="sub">依價格由低到高排列。價格為 Booking 上 6 人、3 晚的總價；每人每晚固定以 6 人計算。點照片可看大圖。</p>
   <div class="houses" id="houseList"></div>
 </section>
 
@@ -330,41 +310,51 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
         <div>
           <label class="label" for="name">名字</label>
           <input type="text" id="name" maxlength="30" autocomplete="nickname" placeholder="大家認得出來的名字">
-          <div class="found" id="found">已找到你之前的回覆並帶入，送出後會覆蓋。</div>
+          <div class="found" id="found" hidden></div>
+          <div class="ferr" id="err-name"></div>
         </div>
         <div>
           <label class="label" for="count">含自己共幾人</label>
           <input type="number" id="count" min="1" max="20" value="1" inputmode="numeric">
+          <div class="help">同行的人如果會自己填，就不要算進來</div>
+          <div class="ferr" id="err-count"></div>
         </div>
       </div>
 
       <div class="field">
-        <span class="label">民宿排序 <span class="hint">依喜好依序點 5 間：第 1 名 5 分、第 2 名 4 分…第 5 名 1 分；再點一次可取消</span></span>
+        <label class="opt">
+          <input type="checkbox" id="busy">
+          <span class="t">這次不參加<span class="d">勾選後不用排序民宿、選日期</span></span>
+        </label>
+      </div>
+
+      <div class="field" id="rankField">
+        <span class="label">民宿排序 <span class="hint">依喜好點 1～5 間：第 1 名 5 分、第 2 名 4 分…第 5 名 1 分</span></span>
         <div class="rank-pick" id="rankPick"></div>
+        <ol class="rank-list" id="rankList"></ol>
         <div class="rank-tools">
           <span id="rankCount"></span>
           <button type="button" class="btn-text" id="rankClear">清除排序</button>
         </div>
-        <div class="opts other" id="choiceOpts"></div>
+        <div class="help">再點一次可取消，取消後後面的會往前補；可用 ↑ ↓ 調整順序。</div>
+        <div class="ferr" id="err-rank"></div>
       </div>
 
-      <div class="field">
-        <span class="label">哪些時段可以 <span class="hint">勾選可以參加的時段</span></span>
-        <div class="slots" id="slotGrid"></div>
-        <div class="slot-tools">
-          <button type="button" class="btn-text" id="slotAll">全選</button>
-          <button type="button" class="btn-text" id="slotNone">清除</button>
-        </div>
+      <div class="field" id="stayField">
+        <span class="label">希望住到哪一天 <span class="hint">都是 1/1（五）入住</span></span>
+        <div class="opts" id="stayOpts"></div>
+        <div class="ferr" id="err-stay"></div>
       </div>
 
       <div class="field">
         <label class="label" for="message">公開留言 <span class="hint">選填，所有人都看得到</span></label>
-        <textarea id="message" maxlength="500" placeholder="例如：1/3 晚上要先走、想吃海鮮、可以開車載人…"></textarea>
+        <textarea id="message" maxlength="500" placeholder="例如：1/2 晚上才到、想吃海鮮、可以開車載人…"></textarea>
       </div>
 
       <div class="actions">
         <button type="submit" class="primary" id="submitBtn">送出</button>
         <span class="status" id="status" role="status"></span>
+        <a href="#results" class="btn ghost" id="toResults" hidden>看目前結果 ↓</a>
       </div>
     </form>
   </div>
@@ -378,8 +368,8 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
   <h3 class="block">民宿排名 <span class="hint" id="rankHint"></span></h3>
   <div class="board" id="rankBoard"></div>
 
-  <h3 class="block">時段</h3>
-  <div class="scroller"><table id="slotTable"></table></div>
+  <h3 class="block">每個人的回覆</h3>
+  <div class="scroller"><table id="replyTable"></table></div>
 
   <h3 class="block">留言</h3>
   <div class="msgs" id="msgs"></div>
@@ -394,49 +384,36 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbxJjw1lAW6Lp_UBs3-n4c0A
 
 const DEADLINE = new Date('2026-10-21T23:59:59+08:00');
 const RANK_POINTS = [5, 4, 3, 2, 1]; // 第 1–5 名的分數
+const MAX_RANK = RANK_POINTS.length;
 
 const BK = slug => `https://www.booking.com/hotel/tw/${slug}.zh-tw.html?checkin=2027-01-01&checkout=2027-01-04&group_adults=6&group_children=0&no_rooms=1`;
+// 依總價由低到高排列；rating 為 Booking 評分（查詢日 2026/10/14），null 表示尚無評價
 const HOUSES = [
   {
     id: 'shuwu', name: '九份金瓜石樹屋', short: '樹屋',
     loc: '新北市瑞芳區・九份金瓜石',
-    total: 24000,
+    total: 24000, rating: [9.4, 115],
     room: '整棟包棟（2 房 + 客廳沙發床）',
     max: '6 人（此方案；可加床 NT$1,000/人/晚）',
     checkin: '15:00–20:00', checkout: '11:00 前',
     travel: '從台北約 1 小時',
-    summary: '9 間裡最便宜，離台北也近，到九份老街開車約 5 分鐘。整棟包下來，有廚房、花園，免費停車。可以帶寵物不另收費，但要事先告知。早餐可以在房內吃。',
-    pet: true, kitchen: true,
+    summary: '8 間裡最便宜，離台北也近，到九份老街開車約 5 分鐘。整棟包下來，有廚房、花園，免費停車。可以帶寵物不另收費，但要事先告知。早餐可以在房內吃。',
+    whole: true, pet: true, kitchen: true,
     extra: '寵物不另收費，需事先告知',
     amenities: '露台、免費停車、花園、小吃吧、家庭房、禁菸客房、隔音客房、房內享用早餐、空調、早餐',
     booking: BK('jiu-fen-jin-gua-shi-shu-wu-137'),
     map: 'https://maps.app.goo.gl/vU8jPN52AtL1cPRd9',
   },
   {
-    id: 'mumulin', name: '沐沐林', short: '沐沐林',
-    loc: '宜蘭縣礁溪鄉',
-    total: 27197,
-    room: '六人房（雙臥室公寓整間）',
-    max: '6 人',
-    checkin: '15:00–21:00', checkout: 'Booking 未註明',
-    travel: '從台北約 1 小時',
-    summary: '在礁溪，離台北近。設施最多：室外泳池、卡拉 OK、室內遊戲區、花園都有，冬天下不了水也有得玩。雙臥室公寓整間住 6 人，可帶寵物但要另付費。剛上架，還沒有住客評價。',
-    pet: true, kitchen: true,
-    extra: '新上架尚無評價；寵物需事先詢問、可能另收費',
-    amenities: '室外游泳池、露台、免費停車、海灘椅／躺椅、卡拉 OK、花園、家庭房、禁菸客房、室內遊戲區、空調',
-    booking: BK('mumulin-mu-mu-lin-yi-lan-jiao-xi-villa'),
-    map: 'https://maps.app.goo.gl/2BMGgRsmQNyFx8ik9',
-  },
-  {
     id: 'thewus', name: '舒室民宿', short: '舒室',
     loc: '台南市安平區・安平運河旁',
-    total: 24750,
+    total: 24750, rating: null,
     room: '整棟包棟（2 房）',
     max: '6 人',
     checkin: '15:00–18:30', checkout: '11:00 前',
     travel: '從台北約 4 小時',
-    summary: '在安平老街區，走路就能到安平古堡，牛肉湯、小吃都很近，適合邊住邊吃。整棟 2 房住 6 人，有廚房，價格在 9 間裡排第二便宜。不能帶寵物。最晚 18:30 要入住，要先匯訂金。',
-    pet: false, kitchen: true,
+    summary: '在安平老街區，走路就能到安平古堡，牛肉湯、小吃都很近，適合邊住邊吃。整棟 2 房住 6 人，有廚房，價格在 8 間裡排第二便宜。不能帶寵物。最晚 18:30 要入住，要先匯訂金。',
+    whole: true, pet: false, kitchen: true,
     extra: '需在入住前轉帳預付訂金；入住時要出示證件和信用卡',
     amenities: '露台、免費停車、公共廚房、家庭房、行李寄存、快速入住／退房、禁菸客房、隔音客房、旅遊諮詢台、空調',
     booking: BK('the-wus'),
@@ -445,13 +422,13 @@ const HOUSES = [
   {
     id: 'mingyue', name: '明玥居', short: '明玥居',
     loc: '南投縣國姓鄉・山區',
-    total: 25850,
+    total: 25850, rating: [9.2, 51],
     room: '整棟包棟（3 房）',
     max: '6–8 人（2F 可加床，自帶寢具不加價）',
     checkin: '15:00–22:00', checkout: '11:00 前',
     travel: '從台北約 2.5 小時',
-    summary: '9 間裡唯一在深山中，看得到山景，有大陽台和花園，很適合放空。整棟 3 房，空間大，可以加床到 8 人，有室內遊戲區和廚房。不能帶寵物。',
-    pet: false, kitchen: true, mountain: true,
+    summary: '8 間裡唯一在深山中，看得到山景，有大陽台和花園，很適合放空。整棟 3 房，空間大，可以加床到 8 人，有室內遊戲區和廚房。不能帶寵物。',
+    whole: true, pet: false, kitchen: true, mountain: true,
     extra: '位在山區，建議先採買；2F 高架地板可加床',
     amenities: '露台、免費停車、遮陽傘、公共廚房、花園、家庭房、快速入住／退房、禁菸客房、室內遊戲區、空調',
     booking: BK('ming-yue-ju-guo-xing'),
@@ -460,29 +437,44 @@ const HOUSES = [
   {
     id: 'chuying', name: '初櫻.見晴花蓮山居', short: '初櫻',
     loc: '花蓮縣吉安鄉・初英山下',
-    total: 26000,
+    total: 26000, rating: [9.5, 211],
     room: '整棟包棟（2 房）',
     max: '6 人',
     checkin: '15:00–17:30', checkout: '11:00 前',
     travel: '從台北約 3 小時',
-    summary: '在花蓮初英山下，三面環山，前面是牧場，很安靜。有免費腳踏車、早餐和每日清潔。整棟 2 房住 6 人。不能帶寵物，也禁止派對，17:30 前就要入住。',
-    pet: false, kitchen: true,
-    extra: '入住截止較早（17:30）；禁止派對',
+    summary: '在花蓮初英山下，三面環山，前面是牧場，很安靜。可租腳踏車，有早餐和每日清潔，但沒有廚房（只有冰箱、熱水壺）。整棟 2 房住 6 人。不能帶寵物，也禁止派對，17:30 前就要入住。',
+    whole: true, pet: false, kitchen: false,
+    extra: '入住截止較早（17:30）；禁止派對；沒有廚房',
     amenities: '露台、免費停車、腳踏車租借、花園、家庭房、行李寄存、快速入住／退房、每日清潔服務、禁菸客房、早餐',
     booking: BK('chu-ying-jian-qing-hua-lian-shan-ju-min-su'),
     map: 'https://maps.app.goo.gl/ZsTamU5D7E8ThXJa7',
   },
   {
+    id: 'mumulin', name: '沐沐林', short: '沐沐林',
+    loc: '宜蘭縣礁溪鄉',
+    total: 27197, rating: null,
+    room: '六人房（雙臥室公寓整間，非整棟）',
+    max: '6 人',
+    checkin: '15:00–21:00', checkout: 'Booking 未註明',
+    travel: '從台北約 1 小時',
+    summary: '在礁溪，離台北近。設施最多：室外泳池、卡拉 OK、室內遊戲區、花園都有，冬天下不了水也有得玩。這間不是整棟，是雙臥室公寓整間住 6 人。可帶寵物，但要事先詢問、可能另收費。剛上架，還沒有住客評價。',
+    whole: false, pet: true, kitchen: true,
+    extra: '非整棟；新上架尚無評價；寵物需事先詢問、可能另收費',
+    amenities: '室外游泳池、露台、免費停車、海灘椅／躺椅、卡拉 OK、花園、家庭房、禁菸客房、室內遊戲區、空調',
+    booking: BK('mumulin-mu-mu-lin-yi-lan-jiao-xi-villa'),
+    map: 'https://maps.app.goo.gl/2BMGgRsmQNyFx8ik9',
+  },
+  {
     id: 'fangman', name: '放慢1館 放慢民宿', short: '放慢',
     loc: '花蓮縣花蓮市',
-    total: 31050,
+    total: 31050, rating: [8.5, 9],
     room: '整棟包棟（開放 3 房）',
     max: '6–14 人（依人數開放房間）',
     checkin: '彈性（24 小時）', checkout: '彈性（24 小時）',
     travel: '從台北約 3 小時',
-    summary: '在花蓮市區，離南濱海灘約 2 公里，只接一組客人，會依人數開放房間，人多也住得下。入住退房時間彈性，有機場接駁和租車服務。可帶寵物（另付費）。入住時要付押金 NT$3,000。',
-    pet: true, kitchen: true,
-    extra: '入住付押金 NT$3,000，無損壞全額退還；禁止派對',
+    summary: '在花蓮市區，離南濱海灘約 2 公里，只接一組客人，會依人數開放房間，人多也住得下。入住退房時間彈性，有機場接駁和租車服務，但 Booking 上沒有寫廚房。可帶寵物，但要事先詢問、可能另收費。入住時要付押金 NT$3,000。',
+    whole: true, pet: true, kitchen: false,
+    extra: '入住付押金 NT$3,000，無損壞全額退還；禁止派對；Booking 未列廚房',
     amenities: '露台、免費停車、家庭房、快速入住／退房、禁菸客房、租車服務、空調、機場接駁車、免費無線網路',
     booking: BK('fang-man-min-su'),
     map: 'https://maps.app.goo.gl/ugFQicEXPKhDkKRL6',
@@ -490,13 +482,13 @@ const HOUSES = [
   {
     id: 'shanzhuang', name: '山莊別野', short: '山莊別野',
     loc: '台南市新化區',
-    total: 32500,
+    total: 32500, rating: [9.7, 4],
     room: '整棟包棟（3 房）',
     max: '8 人',
     checkin: '15:00–18:00', checkout: '11:00 前',
     travel: '從台北約 3.5 小時',
     summary: '在台南新化，看得到山景，有卡拉 OK、花園和公共廚房，適合關起門來自己玩。整棟 3 房最多住 8 人。不能帶寵物，18:00 前要入住。',
-    pet: false, kitchen: true,
+    whole: true, pet: false, kitchen: true,
     extra: '入住截止較早（18:00）',
     amenities: '露台、免費停車、卡拉 OK、公共廚房、花園、行李寄存、快速入住／退房、禁菸客房、空調、免費無線網路',
     booking: BK('shan-zhuang-bie-shu'),
@@ -505,54 +497,36 @@ const HOUSES = [
   {
     id: 'domo', name: 'DoMo宜蘭', short: 'DoMo',
     loc: '宜蘭縣員山鄉',
-    total: 32800,
+    total: 32800, rating: [5.0, 1],
     room: '整棟包棟（4 房）',
     max: '10 人',
     checkin: '16:00 後', checkout: '12:00 前',
     travel: '從台北約 1 小時',
     summary: '在宜蘭員山，離台北近。整棟 4 房，房間數最多，最多可住 10 人，有公共廚房。可帶寵物（另付費）。16:00 才能入住，但可以住到中午 12:00。要先匯訂金。',
-    pet: true, kitchen: true,
+    whole: true, pet: true, kitchen: true,
     extra: '需在入住前轉帳預付訂金；寵物需事先詢問',
     amenities: '免費停車、公共廚房、家庭房、禁菸客房、空調、免費無線網路',
     booking: BK('domoyi-lan'),
     map: 'https://maps.app.goo.gl/iyN7eAdt4i689EFe8',
   },
-  {
-    id: 'yuhetian', name: '雨禾田', short: '雨禾田',
-    loc: '宜蘭縣三星鄉',
-    total: 38400,
-    room: '整棟包棟（3 房）',
-    max: '11 人',
-    checkin: '15:00–18:00', checkout: '11:00 前',
-    travel: '從台北約 1 小時 15 分',
-    summary: '9 間裡最貴。在宜蘭三星的田園間，整棟 3 房，Booking 上最多可住 11 人，有露台和廚房。不能帶寵物，也禁止自帶卡式爐、電磁爐。要先匯訂金，18:00 前要入住。',
-    pet: false, kitchen: true,
-    extra: '需在入住前轉帳預付訂金；禁止自帶卡式爐／電磁爐',
-    amenities: '露台、家庭房、禁菸客房、空調、免費無線網路',
-    booking: BK('yu-he-tian'),
-    map: 'https://maps.app.goo.gl/tNuKDqV8sZPcDW9F9',
-  },
 ].map(h => ({ ...h, img: `images/${h.id}.jpg`, perNight: h.total / 18 }));
 const HOUSE_IDS = HOUSES.map(h => h.id);
 const HOUSE = Object.fromEntries(HOUSES.map(h => [h.id, h]));
 
-const OTHER = [
-  { id: 'nobook', name: '不包棟', desc: '只參加某天或某晚（看下面時段）' },
-  { id: 'busy', name: '已有約', desc: '這次都不參加' },
+const STAYS = [
+  { id: '0103', name: '1/3（日）退房', desc: '住 2 晚', short: '1/3 退房' },
+  { id: '0104', name: '1/4（一）退房', desc: '住 3 晚', short: '1/4 退房' },
+  { id: 'any', name: '都可以', desc: '1/3 或 1/4 退房都行', short: '都可以' },
 ];
-const CHOICE_NAME = Object.fromEntries([...HOUSES, ...OTHER].map(c => [c.id, c.name]));
-// 有效排序：剛好 5 間、不重複、都是現有民宿（舊版回覆會被視為需重新排序）
-const isRanking = cs => cs.length === RANK_POINTS.length && new Set(cs).size === cs.length && cs.every(c => HOUSE_IDS.includes(c));
+const STAY = Object.fromEntries(STAYS.map(s => [s.id, s]));
 
-const DAYS = [
-  { key: '1231', label: '12/31', wd: '四', parts: ['n'] },
-  { key: '0101', label: '1/1', wd: '五', parts: ['m', 'a', 'n'] },
-  { key: '0102', label: '1/2', wd: '六', parts: ['m', 'a', 'n'] },
-  { key: '0103', label: '1/3', wd: '日', parts: ['m', 'a', 'n'] },
-  { key: '0104', label: '1/4', wd: '一', parts: ['m', 'a', 'n'] },
-];
-const PARTS = [['m', '早'], ['a', '中'], ['n', '晚']];
-const ALL_SLOTS = DAYS.flatMap(d => d.parts.map(p => `${d.key}-${p}`));
+// 整理後端資料：拿掉已移除的民宿；舊版的「不包棟」、時段回覆會變成需重新填寫
+const normalize = r => {
+  const busy = r.choices.includes('busy');
+  const rank = busy ? [] : r.choices.filter(c => HOUSE_IDS.includes(c)).slice(0, MAX_RANK);
+  const stay = !busy && STAY[r.stay] ? r.stay : '';
+  return { ...r, busy, rank, stay, ok: busy || (rank.length > 0 && !!stay) };
+};
 
 const $ = s => document.querySelector(s);
 const el = (tag, attrs = {}, ...kids) => {
@@ -566,6 +540,10 @@ const el = (tag, attrs = {}, ...kids) => {
   return n;
 };
 const fmt = n => n.toLocaleString('zh-TW');
+const fmtTime = iso => {
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+};
 
 let responses = [];
 const closed = () => new Date() > DEADLINE;
@@ -575,7 +553,11 @@ function renderHouses() {
   const list = $('#houseList');
   for (const h of HOUSES) {
     const tags = el('div', { class: 'tags' },
-      el('span', { class: 'tag', text: `最多 ${h.max.split('（')[0]}` }),
+      h.rating
+        ? el('span', { class: 'tag rate', text: `Booking ${h.rating[0].toFixed(1)}（${h.rating[1]} 則）` })
+        : el('span', { class: 'tag', text: 'Booking 尚無評價' }),
+      h.whole ? null : el('span', { class: 'tag warn', text: '非整棟' }),
+      el('span', { class: 'tag', text: `可住 ${h.max.split('（')[0]}` }),
       el('span', { class: 'tag ' + (h.kitchen ? 'yes' : 'no'), text: '廚房' }),
       el('span', { class: 'tag ' + (h.pet ? 'yes' : 'no'), text: '寵物' }),
       h.mountain ? el('span', { class: 'tag', text: '深山中' }) : null,
@@ -583,7 +565,7 @@ function renderHouses() {
     // 子元素數量要等於 .house 的 grid-row span（13）
     const rows = [['房型', h.room], ['可住', h.max], ['入住', h.checkin], ['退房', h.checkout], ['開車', h.travel], ['注意', h.extra], ['設施', h.amenities]]
       .map(([k, v], i) => el('div', { class: 'kv' + (i === 0 ? ' first' : '') }, el('span', { class: 'k', text: k }), el('span', { text: v })));
-    list.append(el('article', { class: 'house' },
+    list.append(el('article', { class: 'house', id: `house-${h.id}` },
       el('a', { class: 'photo', href: h.img, target: '_blank', rel: 'noopener' },
         el('img', { src: h.img, alt: `${h.name} 照片`, loading: 'lazy' })),
       el('div', { class: 'head' }, el('h3', { text: h.name }), el('div', { class: 'loc', text: h.loc })),
@@ -601,106 +583,137 @@ function renderHouses() {
 }
 
 /* ---------- 表單 ---------- */
+let ranking = []; // 依序的民宿 id，第 1 名在最前面
+
 function renderForm() {
   const pick = $('#rankPick');
   for (const h of HOUSES) {
-    pick.append(el('button', { type: 'button', class: 'rk', 'data-id': h.id },
-      el('span', { class: 'no' }),
-      el('span', {}, el('span', { class: 't', text: h.name }),
-        el('span', { class: 'd', text: `NT$${fmt(Math.round(h.perNight))}/人/晚・${h.loc.split('・')[0]}` }))));
+    pick.append(el('div', { class: 'rk-item' },
+      el('button', { type: 'button', class: 'rk', 'data-id': h.id },
+        el('span', { class: 'no' }),
+        el('span', {}, el('span', { class: 't', text: h.name }),
+          el('span', { class: 'd', text: `NT$${fmt(Math.round(h.perNight))}/人/晚・${h.loc.split('・')[0]}` }))),
+      el('a', { class: 'rk-more', href: `#house-${h.id}`, text: '詳情' })));
   }
   pick.addEventListener('click', e => {
     const b = e.target.closest('.rk');
     if (!b || b.disabled) return;
     const id = b.dataset.id;
     if (ranking.includes(id)) ranking = ranking.filter(x => x !== id);
-    else if (ranking.length < RANK_POINTS.length) ranking.push(id);
-    syncLocks();
+    else if (ranking.length < MAX_RANK) ranking.push(id);
+    rankChanged();
   });
-  $('#rankClear').onclick = () => { ranking = []; syncLocks(); };
-
-  const opts = $('#choiceOpts');
-  for (const o of OTHER) {
-    opts.append(el('label', { class: 'opt' },
-      el('input', { type: 'checkbox', name: 'choice', value: o.id }),
-      el('span', { class: 't' }, o.name, el('span', { class: 'd', text: o.desc }))));
-  }
-
-  const grid = $('#slotGrid');
-  grid.append(el('span'));
-  for (const [, l] of PARTS) grid.append(el('span', { class: 'h', text: l }));
-  for (const d of DAYS) {
-    grid.append(el('span', { class: 'd' }, d.label, el('small', { text: `(${d.wd})` })));
-    for (const [p, l] of PARTS) {
-      if (!d.parts.includes(p)) { grid.append(el('span', { class: 'slot none' }, el('span', { text: '—' }))); continue; }
-      const id = `${d.key}-${p}`;
-      grid.append(el('label', { class: 'slot', title: `${d.label} ${l}` },
-        el('input', { type: 'checkbox', name: 'slot', value: id, 'aria-label': `${d.label} ${l}` }),
-        el('span', { text: l })));
+  $('#rankList').addEventListener('click', e => {
+    const b = e.target.closest('.icon-btn');
+    if (!b || b.disabled) return;
+    const i = Number(b.dataset.i);
+    if (b.dataset.act === 'del') ranking.splice(i, 1);
+    else {
+      const j = b.dataset.act === 'up' ? i - 1 : i + 1;
+      [ranking[i], ranking[j]] = [ranking[j], ranking[i]];
     }
-  }
-
-  opts.addEventListener('change', e => {
-    const v = e.target.value;
-    if (e.target.checked) {
-      ranking = [];
-      setChecked('choice', OTHER.map(o => o.id).filter(x => x !== v), false);
-    }
-    if (e.target.checked && v === 'busy') setChecked('slot', ALL_SLOTS, false);
-    syncLocks();
+    rankChanged();
   });
-  $('#slotAll').onclick = () => { setChecked('slot', ALL_SLOTS, true); };
-  $('#slotNone').onclick = () => { setChecked('slot', ALL_SLOTS, false); };
-  $('#name').addEventListener('input', prefill);
+  $('#rankClear').onclick = () => { ranking = []; rankChanged(); };
+
+  const stayOpts = $('#stayOpts');
+  for (const s of STAYS) {
+    stayOpts.append(el('label', { class: 'opt' },
+      el('input', { type: 'radio', name: 'stay', value: s.id }),
+      el('span', { class: 't' }, s.name, el('span', { class: 'd', text: s.desc }))));
+  }
+  stayOpts.addEventListener('change', () => fieldError('stay', ''));
+
+  $('#busy').addEventListener('change', () => { fieldError('rank', ''); fieldError('stay', ''); syncForm(); });
+  $('#name').addEventListener('input', () => {
+    fieldError('name', '');
+    if (findResponse($('#name').value) !== offered) { offered = null; $('#found').hidden = true; }
+  });
+  $('#name').addEventListener('change', checkName);
+  $('#count').addEventListener('input', () => fieldError('count', ''));
   $('#survey').addEventListener('submit', submit);
-  syncLocks();
+  syncForm();
 }
 
-function setChecked(name, values, on) {
-  document.querySelectorAll(`input[name=${name}]`).forEach(i => { if (values.includes(i.value)) i.checked = on; });
+function rankChanged() {
+  fieldError('rank', '');
+  syncForm();
 }
-const checkedValues = name => [...document.querySelectorAll(`input[name=${name}]:checked`)].map(i => i.value);
 
-let ranking = []; // 依序的民宿 id，第 1 名在最前面
+const iconBtn = (text, label, act, i, disabled) => {
+  const b = el('button', { type: 'button', class: 'icon-btn', 'data-act': act, 'data-i': String(i), 'aria-label': label, title: label, text });
+  b.disabled = disabled || closed();
+  return b;
+};
 
-function syncLocks() {
-  const other = checkedValues('choice');
-  const busy = other.includes('busy');
-  const optedOut = other.length > 0;
-  const full = ranking.length >= RANK_POINTS.length;
+function syncForm() {
+  const busy = $('#busy').checked;
+  $('#rankField').hidden = $('#stayField').hidden = busy;
+  const full = ranking.length >= MAX_RANK;
   document.querySelectorAll('.rk').forEach(b => {
     const pos = ranking.indexOf(b.dataset.id);
     b.classList.toggle('on', pos >= 0);
-    b.disabled = closed() || optedOut || (pos < 0 && full);
+    b.disabled = closed() || (pos < 0 && full);
     b.setAttribute('aria-pressed', String(pos >= 0));
-    const no = b.querySelector('.no');
-    no.replaceChildren(...(pos >= 0 ? [String(pos + 1), el('small', { text: `${RANK_POINTS[pos]}分` })] : []));
+    b.querySelector('.no').replaceChildren(...(pos >= 0 ? [String(pos + 1), el('small', { text: `${RANK_POINTS[pos]}分` })] : []));
   });
+  $('#rankList').replaceChildren(...ranking.map((id, i) => el('li', {},
+    el('span', { class: 'n', text: `第 ${i + 1} 名` }),
+    el('span', { class: 'nm' }, HOUSE[id].name, el('small', { text: `${RANK_POINTS[i]} 分` })),
+    iconBtn('↑', '往前移', 'up', i, i === 0),
+    iconBtn('↓', '往後移', 'down', i, i === ranking.length - 1),
+    iconBtn('✕', '取消', 'del', i, false))));
   const cnt = $('#rankCount');
-  cnt.textContent = optedOut ? '已選擇不參與排序' : full ? `已排好 ${RANK_POINTS.length} 間 ✓` : `已排 ${ranking.length} / ${RANK_POINTS.length} 間`;
-  cnt.className = full && !optedOut ? 'done' : '';
-  $('#rankClear').disabled = optedOut || !ranking.length;
-  document.querySelectorAll('input[name=slot]').forEach(i => { i.disabled = busy; if (busy) i.checked = false; });
-  $('#slotAll').disabled = $('#slotNone').disabled = busy;
+  cnt.textContent = full ? `已排滿 ${MAX_RANK} 間 ✓` : ranking.length ? `已排 ${ranking.length} 間 ✓（最多 ${MAX_RANK} 間）` : `還沒選，請點 1～${MAX_RANK} 間`;
+  cnt.className = ranking.length ? 'done' : '';
+  $('#rankClear').disabled = closed() || !ranking.length;
 }
+
+function fieldError(key, msg) { $(`#err-${key}`).textContent = msg; }
 
 function findResponse(name) {
   const key = name.trim().toLowerCase();
-  return key ? responses.find(r => r.name.trim().toLowerCase() === key) : null;
+  return key ? responses.find(r => r.name.trim().toLowerCase() === key) || null : null;
 }
 
-let prefilledFor = null;
-function prefill() {
+// 名字輸入完（離開欄位）才比對；找到之前的回覆時先詢問，不直接覆蓋目前填的內容
+let offered = null;
+function checkName() {
   const r = findResponse($('#name').value);
-  $('#found').classList.toggle('show', !!r);
-  if (!r || prefilledFor === r) return;
-  prefilledFor = r;
+  if (!r) { offered = null; $('#found').hidden = true; return; }
+  if (r === offered || closed()) return;
+  offered = r;
+  showFound(r, 'ask');
+}
+
+function showFound(r, mode) {
+  const box = $('#found');
+  box.hidden = false;
+  if (mode === 'ask') {
+    const when = fmtTime(r.updatedAt);
+    const btn = (text, fn) => { const b = el('button', { type: 'button', class: 'btn-text', text }); b.onclick = fn; return b; };
+    box.replaceChildren(
+      el('div', { text: `找到「${r.name}」之前的回覆${when ? `（${when}）` : ''}，要帶入嗎？` }),
+      el('div', { class: 'btns' },
+        btn('帶入之前的回覆', () => { applyResponse(r); showFound(r, 'done'); }),
+        btn('不用，我重新填', () => showFound(r, 'skip'))));
+  } else {
+    box.textContent = {
+      done: '已帶入之前的回覆，送出後會覆蓋。',
+      skip: '送出後會覆蓋之前的回覆。',
+      saved: '已存好。之後用同一個名字再送出，會覆蓋這份回覆。',
+    }[mode];
+  }
+}
+
+function applyResponse(r) {
   $('#count').value = r.count;
-  ranking = isRanking(r.choices) ? [...r.choices] : [];
-  document.querySelectorAll('input[name=choice]').forEach(i => { i.checked = r.choices.includes(i.value); });
-  document.querySelectorAll('input[name=slot]').forEach(i => { i.disabled = false; i.checked = r.slots.includes(i.value); });
+  $('#busy').checked = r.busy;
+  ranking = [...r.rank];
+  document.querySelectorAll('input[name=stay]').forEach(i => { i.checked = i.value === r.stay; });
   $('#message').value = r.message || '';
-  syncLocks();
+  document.querySelectorAll('.ferr').forEach(e => { e.textContent = ''; });
+  syncForm();
 }
 
 function setStatus(text, kind = '') {
@@ -714,28 +727,40 @@ async function submit(e) {
   if (closed()) return setStatus('已超過填寫截止日', 'err');
   const name = $('#name').value.trim();
   const count = Number($('#count').value);
-  const other = checkedValues('choice');
-  const choices = other.length ? other : ranking;
-  const slots = checkedValues('slot');
-  if (!name) { $('#name').focus(); return setStatus('請填名字', 'err'); }
-  if (!(Number.isInteger(count) && count >= 1 && count <= 20)) { $('#count').focus(); return setStatus('人數請填 1–20', 'err'); }
-  if (!other.length && ranking.length !== RANK_POINTS.length) return setStatus(`請依序排出 ${RANK_POINTS.length} 間民宿（或選「不包棟」／「已有約」）`, 'err');
-  if (!choices.includes('busy') && !slots.length) return setStatus('請至少勾一個可以的時段（都不行請選「已有約」）', 'err');
+  const busy = $('#busy').checked;
+  const stay = busy ? '' : (document.querySelector('input[name=stay]:checked') || {}).value || '';
+
+  const errs = [];
+  if (!name) errs.push(['name', '請填名字', $('#name')]);
+  if (!(Number.isInteger(count) && count >= 1 && count <= 20)) errs.push(['count', '人數請填 1–20', $('#count')]);
+  if (!busy && !ranking.length) errs.push(['rank', `請至少點 1 間民宿（最多 ${MAX_RANK} 間）；不參加請勾上面的「這次不參加」`]);
+  if (!busy && !stay) errs.push(['stay', '請選希望住到哪一天']);
+  document.querySelectorAll('.ferr').forEach(x => { x.textContent = ''; });
+  if (errs.length) {
+    for (const [k, m] of errs) fieldError(k, m);
+    const [k, , input] = errs[0];
+    $(`#err-${k}`).closest('.field > div, .field').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (input) input.focus({ preventScroll: true });
+    return setStatus(errs.length > 1 ? `還有 ${errs.length} 個地方沒填好` : errs[0][1], 'err');
+  }
 
   const btn = $('#submitBtn');
   btn.disabled = true;
+  $('#toResults').hidden = true;
   setStatus('送出中…');
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      body: JSON.stringify({ name, count, choices, slots, message: $('#message').value.trim() }),
+      body: JSON.stringify({ name, count, choices: busy ? ['busy'] : ranking, stay, message: $('#message').value.trim() }),
     });
     const data = await res.json();
     if (!data.ok) throw new Error(data.error || '送出失敗');
-    responses = data.responses;
+    responses = data.responses.map(normalize);
     renderResults();
     setStatus(`已送出，謝謝 ${name}！`, 'ok');
-    $('#found').classList.add('show');
+    $('#toResults').hidden = false;
+    offered = findResponse(name);
+    if (offered) showFound(offered, 'saved');
   } catch (err) {
     setStatus(`送出失敗：${err.message}`, 'err');
   } finally {
@@ -748,35 +773,36 @@ async function load() {
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
-    responses = data.responses || [];
+    responses = (data.responses || []).map(normalize);
     renderResults();
-    prefill();
+    checkName();
   } catch (err) {
     $('#resultSub').textContent = '結果載入失敗，請重新整理頁面。';
   }
 }
 
 function renderResults() {
-  const going = responses.filter(r => !r.choices.includes('busy'));
   const sumPeople = rs => rs.reduce((s, r) => s + r.count, 0);
-  $('#resultSub').textContent = `共 ${responses.length} 份回覆、會來的約 ${sumPeople(going)} 人（含同行）。人數均含同行者。`;
+  const going = responses.filter(r => r.ok && !r.busy);
+  const byStay = STAYS.map(s => ({ ...s, rs: going.filter(r => r.stay === s.id) }));
+  const redo = responses.filter(r => !r.ok);
+  $('#resultSub').textContent = `共 ${responses.length} 份回覆，會參加 ${sumPeople(going)} 人（${byStay.map(s => `${s.short} ${sumPeople(s.rs)} 人`).join('、')}）。人數均含同行者。`;
 
   const bar = pct => el('div', { class: 'bar' }, (() => { const i = el('i'); i.style.width = `${pct}%`; return i; })());
   const who = rs => rs.map(r => r.count > 1 ? `${r.name}+${r.count - 1}` : r.name).join('、') || '—';
 
-  const voters = responses.filter(r => isRanking(r.choices));
-  const stale = responses.filter(r => !isRanking(r.choices) && !r.choices.some(c => OTHER.some(o => o.id === c)));
   const groups = [
-    { name: '參與排序', rs: voters },
-    ...OTHER.map(o => ({ name: o.name, rs: responses.filter(r => r.choices.includes(o.id)) })),
+    { name: '會參加', rs: going, main: true },
+    ...byStay.map(s => ({ name: s.name, rs: s.rs })),
+    { name: '不參加', rs: responses.filter(r => r.busy) },
   ];
-  if (stale.length) groups.push({ name: '需重新排序', rs: stale });
+  if (redo.length) groups.push({ name: '需重新填寫', rs: redo });
   const stats = $('#stats');
   stats.replaceChildren();
   const maxPeople = Math.max(1, ...groups.map(g => sumPeople(g.rs)));
   for (const g of groups) {
     const n = sumPeople(g.rs);
-    stats.append(el('div', { class: 'stat' },
+    stats.append(el('div', { class: 'stat' + (g.main ? ' main' : '') },
       el('div', { class: 'k', text: g.name }),
       el('div', { class: 'v' }, String(n), el('small', { text: ' 人' })),
       bar(n / maxPeople * 100),
@@ -785,8 +811,9 @@ function renderResults() {
   }
 
   // 每份排序一票（不乘同行人數）：第 1 名 5 分 … 第 5 名 1 分
+  const voters = responses.filter(r => r.rank.length);
   const score = Object.fromEntries(HOUSE_IDS.map(id => [id, { pts: 0, byPos: RANK_POINTS.map(() => 0) }]));
-  for (const r of voters) r.choices.forEach((id, i) => { score[id].pts += RANK_POINTS[i]; score[id].byPos[i]++; });
+  for (const r of voters) r.rank.forEach((id, i) => { score[id].pts += RANK_POINTS[i]; score[id].byPos[i]++; });
   const order = [...HOUSE_IDS].sort((a, b) => score[b].pts - score[a].pts || score[b].byPos[0] - score[a].byPos[0] || HOUSE_IDS.indexOf(a) - HOUSE_IDS.indexOf(b));
   const maxPts = Math.max(1, ...order.map(id => score[id].pts));
   $('#rankHint').textContent = `${voters.length} 人排序・每人一票，不乘同行人數`;
@@ -808,45 +835,25 @@ function renderResults() {
     ));
   });
 
-  const t = $('#slotTable');
+  const t = $('#replyTable');
   t.replaceChildren();
-  const head1 = el('tr', {}, el('th', { class: 'l name', rowspan: '2', text: '名字' }), el('th', { rowspan: '2', text: '人數' }), el('th', { class: 'l', rowspan: '2', text: '排序' }));
-  const head2 = el('tr');
-  for (const d of DAYS) {
-    head1.append(el('th', { class: 'day', colspan: String(d.parts.length), text: `${d.label}(${d.wd})` }));
-    d.parts.forEach((p, i) => head2.append(el('th', { class: i === 0 ? 'day' : '', text: PARTS.find(x => x[0] === p)[1] })));
-  }
-  const thead = el('thead', {}, head1, head2);
+  const thead = el('thead', {}, el('tr', {},
+    el('th', { class: 'l name', text: '名字' }), el('th', { text: '人數' }), el('th', { text: '住到' }), el('th', { class: 'l', text: '排序' })));
   const tbody = el('tbody');
-
-  const heat = el('tr', { class: 'heat' }, el('td', { class: 'l name', text: '可以的人數' }), el('td'), el('td'));
-  const maxSlot = Math.max(1, ...ALL_SLOTS.map(s => sumPeople(going.filter(r => r.slots.includes(s)))));
-  for (const s of ALL_SLOTS) {
-    const n = sumPeople(going.filter(r => r.slots.includes(s)));
-    const td = el('td', { class: 'c' + (s.endsWith('-m') || s === '1231-n' ? ' dl' : ''), text: n ? String(n) : '' });
-    const lvl = n ? Math.ceil(n / maxSlot * 4) : 0;
-    td.style.background = `var(--heat-${lvl})`;
-    if (lvl >= 3) td.style.color = 'var(--accent-text)';
-    td.title = going.filter(r => r.slots.includes(s)).map(r => r.name).join('、');
-    heat.append(td);
-  }
-  tbody.append(heat);
-
-  if (!responses.length) {
-    tbody.append(el('tr', {}, el('td', { class: 'empty', colspan: String(3 + ALL_SLOTS.length), text: '還沒有人填寫' })));
-  }
+  if (!responses.length) tbody.append(el('tr', {}, el('td', { class: 'empty', colspan: '4', text: '還沒有人填寫' })));
   const sorted = [...responses].sort((a, b) => a.updatedAt < b.updatedAt ? -1 : 1);
   for (const r of sorted) {
-    const pills = el('td', { class: 'l' }, ...(isRanking(r.choices)
-      ? r.choices.map((c, i) => el('span', { class: 'pill', text: `${i + 1}.${HOUSE[c].short}` }))
-      : r.choices.some(c => OTHER.some(o => o.id === c))
-        ? r.choices.map(c => el('span', { class: 'pill grey', text: CHOICE_NAME[c] || c }))
-        : [el('span', { class: 'pill grey', text: '需重新排序' })]));
-    const tr = el('tr', {}, el('td', { class: 'l name', text: r.name }), el('td', { text: String(r.count) }), pills);
-    for (const s of ALL_SLOTS) {
-      tr.append(el('td', { class: s.endsWith('-m') || s === '1231-n' ? 'dl' : '' }, el('span', { class: 'dot' + (r.slots.includes(s) ? ' on' : '') })));
-    }
-    tbody.append(tr);
+    const stay = r.busy ? el('span', { class: 'pill grey', text: '不參加' })
+      : r.stay ? el('span', { class: 'pill', text: STAY[r.stay].short })
+      : el('span', { class: 'pill warn', text: '需重新填寫' });
+    const rank = r.busy ? '—'
+      : r.rank.length ? r.rank.map((c, i) => el('span', { class: 'pill', text: `${i + 1}.${HOUSE[c].short}` }))
+      : [el('span', { class: 'pill warn', text: '需重新排序' })];
+    tbody.append(el('tr', {},
+      el('td', { class: 'l name', text: r.name }),
+      el('td', { text: String(r.count) }),
+      el('td', {}, stay),
+      el('td', { class: 'l' }, ...[].concat(rank))));
   }
   t.append(thead, tbody);
 
@@ -855,9 +862,8 @@ function renderResults() {
   const withMsg = sorted.filter(r => r.message).reverse();
   if (!withMsg.length) msgs.append(el('div', { class: 'empty', text: '還沒有留言' }));
   for (const r of withMsg) {
-    const when = r.updatedAt ? new Date(r.updatedAt).toLocaleString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
     msgs.append(el('div', { class: 'msg' },
-      el('div', { class: 'meta' }, el('b', { text: r.name }), when),
+      el('div', { class: 'meta' }, el('b', { text: r.name }), fmtTime(r.updatedAt)),
       el('p', { text: r.message })));
   }
 }
