@@ -7,7 +7,8 @@ const HEADERS = ['name', 'count', 'choices', 'slots', 'message', 'updatedAt'];
 const DEADLINE = new Date('2026-10-31T23:59:59+08:00');
 const MAX_ROWS = 200; // 防灌爆：超過這個筆數就不收新名字，舊名字仍可修改
 
-const HOUSES = ['haiyang', 'longpan', 'shuwu'];
+const HOUSES = ['shuwu', 'mumulin', 'thewus', 'mingyue', 'chuying', 'fangman', 'shanzhuang', 'domo', 'yuhetian'];
+const RANK_SIZE = 5; // 依序排 5 間，分別得 5、4、3、2、1 分
 const OTHER_CHOICES = ['nobook', 'busy'];
 const SLOTS = ['1231-n',
   '0101-m', '0101-a', '0101-n',
@@ -64,16 +65,16 @@ function doPost(e) {
 
   const name = String(data.name || '').trim().slice(0, 30);
   const count = Math.round(Number(data.count));
-  let choices = (data.choices || []).filter(c => HOUSES.includes(c) || OTHER_CHOICES.includes(c));
+  let choices = (data.choices || []).filter((c, i, a) => (HOUSES.includes(c) || OTHER_CHOICES.includes(c)) && a.indexOf(c) === i);
   let slots = (data.slots || []).filter(s => SLOTS.includes(s));
   const message = String(data.message || '').trim().slice(0, 500);
 
   if (!name) return json_({ ok: false, error: '請填名字' });
   if (!(count >= 1 && count <= 20)) return json_({ ok: false, error: '人數需介於 1–20' });
-  if (choices.length === 0) return json_({ ok: false, error: '請選擇住宿意願' });
+  if (choices.length === 0) return json_({ ok: false, error: '請排序民宿或選擇不包棟／已有約' });
   if (choices.includes('busy')) { choices = ['busy']; slots = []; }
   else if (choices.includes('nobook')) choices = ['nobook'];
-  else if (choices.length > 2) return json_({ ok: false, error: '最多選兩間' });
+  else if (choices.length !== RANK_SIZE) return json_({ ok: false, error: `請依序排出 ${RANK_SIZE} 間民宿` });
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);

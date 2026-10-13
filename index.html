@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>2027 跨年包棟</title>
-<meta name="description" content="2027 跨年包棟調查：三間候選民宿比較、時段與住宿意願填寫">
+<meta name="description" content="2027 跨年包棟調查：9 間候選民宿比較、排序投票與時段調查">
 <style>
 :root {
   --bg: #f7f4ee;
@@ -110,7 +110,7 @@ h2 { font-size: 22px; margin: 0 0 4px; }
 .sub { color: var(--muted); margin: 0 0 18px; font-size: 14px; }
 
 /* house cards */
-/* 每張卡片用 subgrid 共用同一組列，三間的同一欄位會對齊 */
+/* 每張卡片用 subgrid 共用同一組列，同一排卡片的同一欄位會對齊 */
 .houses { display: grid; column-gap: 18px; row-gap: 0; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 .house {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
@@ -182,6 +182,42 @@ textarea { min-height: 90px; resize: vertical; }
 .opt:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
 .opt:has(input:disabled) { opacity: .45; cursor: not-allowed; }
 .divider { grid-column: 1 / -1; height: 1px; background: var(--line); margin: 4px 0; }
+.opts.other { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+
+.rank-pick { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.rk {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; text-align: left;
+  border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; cursor: pointer;
+}
+.rk .no {
+  flex: none; width: 34px; height: 34px; border-radius: 50%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; border: 1px dashed var(--line); color: var(--muted);
+  font-weight: 700; font-size: 15px; line-height: 1;
+}
+.rk .no small { font-size: 10px; font-weight: 500; margin-top: 1px; }
+.rk .t { font-weight: 600; display: block; }
+.rk .d { display: block; font-size: 13px; color: var(--muted); }
+.rk.on { border-color: var(--accent); background: var(--accent-soft); }
+.rk.on .no { background: var(--accent); border: none; color: var(--accent-text); }
+.rk:disabled { opacity: .45; cursor: not-allowed; }
+.rk:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rank-tools { display: flex; align-items: center; gap: 14px; margin-top: 10px; font-size: 14px; color: var(--muted); }
+.rank-tools .done { color: var(--ok); font-weight: 600; }
+
+.board { display: grid; gap: 8px; }
+.brow {
+  display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 12px; align-items: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 14px;
+}
+.brow .pos { font-size: 18px; font-weight: 700; color: var(--muted); text-align: center; }
+.brow.top .pos { color: var(--accent); }
+.brow .nm { font-weight: 600; }
+.brow .nm small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+.brow .pts { font-size: 20px; font-weight: 700; text-align: right; white-space: nowrap; }
+.brow .pts small { font-size: 13px; font-weight: 500; color: var(--muted); }
+.brow .bar { margin-top: 6px; }
+.brow .votes { font-size: 12px; color: var(--muted); margin-top: 4px; }
+h3.block .hint { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 6px; }
 
 .slots { display: grid; grid-template-columns: auto repeat(3, 1fr); gap: 6px; max-width: 460px; }
 .slots .h { text-align: center; font-size: 13px; color: var(--muted); }
@@ -266,11 +302,11 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
 
 <header class="hero">
   <h1>2027 跨年包棟</h1>
-  <p>三間候選民宿，大家選一下想住哪裡、哪些時段有空。</p>
+  <p>9 間候選民宿，大家排出最想住的 5 間，再勾一下哪些時段有空。</p>
   <div class="facts">
     <span class="chip">住宿 1/1（五）入住 → 1/4（一）退房，共 3 晚</span>
     <span class="chip accent" id="deadlineChip">填寫截止 10/31（六）</span>
-    <span class="chip">價格查詢日 2026/10/12</span>
+    <span class="chip">價格查詢日 2026/10/13–14</span>
   </div>
   <nav class="jump">
     <a href="#form">我要填寫</a>
@@ -304,8 +340,13 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
       </div>
 
       <div class="field">
-        <span class="label">住宿意願 <span class="hint">民宿最多選兩間</span></span>
-        <div class="opts" id="choiceOpts"></div>
+        <span class="label">民宿排序 <span class="hint">依喜好依序點 5 間：第 1 名 5 分、第 2 名 4 分…第 5 名 1 分；再點一次可取消</span></span>
+        <div class="rank-pick" id="rankPick"></div>
+        <div class="rank-tools">
+          <span id="rankCount"></span>
+          <button type="button" class="btn-text" id="rankClear">清除排序</button>
+        </div>
+        <div class="opts other" id="choiceOpts"></div>
       </div>
 
       <div class="field">
@@ -335,6 +376,9 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
   <p class="sub" id="resultSub">載入中…</p>
   <div class="stats" id="stats"></div>
 
+  <h3 class="block">民宿排名 <span class="hint" id="rankHint"></span></h3>
+  <div class="board" id="rankBoard"></div>
+
   <h3 class="block">時段</h3>
   <div class="scroller"><table id="slotTable"></table></div>
 
@@ -342,7 +386,7 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
   <div class="msgs" id="msgs"></div>
 </section>
 
-<footer>資料來源：Booking.com（查詢日 2026/10/12）。開車時間為從台北出發的大約時間，不含連假塞車。</footer>
+<footer>資料來源：Booking.com（查詢日 2026/10/13–14）。開車時間為從台北出發的大約時間，不含連假塞車。</footer>
 </div>
 
 <script>
@@ -350,73 +394,156 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
 const API_URL = 'https://script.google.com/macros/s/AKfycbxJjw1lAW6Lp_UBs3-n4c0AnQESIAOBEFXR9v7gusNt3PrwhkUoiUhwTvHu7fytzG68/exec';
 
 const DEADLINE = new Date('2026-10-31T23:59:59+08:00');
-const MAX_HOUSES = 2;
+const RANK_POINTS = [5, 4, 3, 2, 1]; // 第 1–5 名的分數
 
+const BK = slug => `https://www.booking.com/hotel/tw/${slug}.zh-tw.html?checkin=2027-01-01&checkout=2027-01-04&group_adults=6&group_children=0&no_rooms=1`;
 const HOUSES = [
   {
-    id: 'haiyang',
-    name: '海洋森活',
-    loc: '宜蘭縣蘇澳鎮・南方澳情人灣',
-    img: 'images/haiyang.jpg',
-    total: 15940,
-    perNight: 885.56,
-    room: '四人房 + 雙人房（公寓式樓層）',
-    max: '6 人',
-    checkin: '15:00–22:00（19:00 後需先付清房費取密碼）',
-    checkout: '11:00 前',
-    travel: '從台北約 1.5 小時',
-    summary: '三間裡最便宜。就在南方澳海邊，門口對著太平洋可以看日出。兩房剛好住 6 人，但沒有廚房、不能帶寵物。位置偏遠，建議先在鎮上買好吃的；早餐只有週六、週日供應（1/2、1/3）。',
-    pet: false, kitchen: false,
-    extra: '需在入住前轉帳預付訂金',
-    amenities: '露台、海濱、家庭房、餐廳、禁菸客房、空調、免費無線網路',
-    booking: 'https://www.booking.com/hotel/tw/hai-yang-sen-huo.zh-tw.html?checkin=2027-01-01&checkout=2027-01-04&group_adults=6&group_children=0&no_rooms=1',
-    map: 'https://maps.app.goo.gl/3V2QkBjrboQ7DRy6A',
-  },
-  {
-    id: 'longpan',
-    name: '龍磐小白屋',
-    loc: '屏東縣恆春鎮・龍磐公園旁',
-    img: 'images/longpan.jpg',
-    total: 20800,
-    perNight: 1155.56,
-    room: '雙臥室包棟（四人房 × 2）',
-    max: '8 人（可加床 NT$600/人/晚）',
-    checkin: '15:00 後',
-    checkout: '11:00 前',
-    travel: '從台北約 5.5–6 小時',
-    summary: '墾丁最南端的獨棟小白屋，走 1 分鐘就到龍磐公園看日出，有草地、公共廚房，可以帶寵物（另收費）。最多住 8 人，空間最寬。缺點是離台北最遠，光交通就要大半天。入住時要付現金押金 NT$2,000，退房時退還。',
-    pet: true, kitchen: true,
-    extra: '現場付現金押金 NT$2,000，退房退還；可停約 4 輛車',
-    amenities: '陽光露台、免費停車、海灘椅／躺椅、公共廚房、家庭房、每日清潔服務、禁菸客房、隔音客房、兒童游泳池、早餐（加購，提供食材自煮）',
-    booking: 'https://www.booking.com/hotel/tw/ken-dian-xin-kentingdessert-4-8ren-bao-dong.zh-tw.html?checkin=2027-01-01&checkout=2027-01-04&group_adults=6&group_children=0&no_rooms=1',
-    map: 'https://maps.app.goo.gl/PXD2npH5XSQLpbLH6',
-  },
-  {
-    id: 'shuwu',
-    name: '九份金瓜石樹屋',
+    id: 'shuwu', name: '九份金瓜石樹屋', short: '樹屋',
     loc: '新北市瑞芳區・九份金瓜石',
-    img: 'images/shuwu.jpg',
     total: 24000,
-    perNight: 1333.33,
     room: '整棟包棟（2 房 + 客廳沙發床）',
     max: '6 人（此方案；可加床 NT$1,000/人/晚）',
-    checkin: '15:00–20:00',
-    checkout: '11:00 前',
+    checkin: '15:00–20:00', checkout: '11:00 前',
     travel: '從台北約 1 小時',
-    summary: '三間裡最貴，但離台北最近，開車約 1 小時，到九份老街約 5 分鐘車程。整棟包下來，有廚房、花園、免費停車；可以帶寵物，不另收費，但要事先告知。早餐可在房內享用。',
+    summary: '9 間裡最便宜，離台北也近，到九份老街開車約 5 分鐘。整棟包下來，有廚房、花園，免費停車。可以帶寵物不另收費，但要事先告知。早餐可以在房內吃。',
     pet: true, kitchen: true,
     extra: '寵物不另收費，需事先告知',
     amenities: '露台、免費停車、花園、小吃吧、家庭房、禁菸客房、隔音客房、房內享用早餐、空調、早餐',
-    booking: 'https://www.booking.com/hotel/tw/jiu-fen-jin-gua-shi-shu-wu-137.zh-tw.html?checkin=2027-01-01&checkout=2027-01-04&group_adults=6&group_children=0&no_rooms=1',
+    booking: BK('jiu-fen-jin-gua-shi-shu-wu-137'),
     map: 'https://maps.app.goo.gl/vU8jPN52AtL1cPRd9',
   },
-];
+  {
+    id: 'mumulin', name: '沐沐林', short: '沐沐林',
+    loc: '宜蘭縣礁溪鄉',
+    total: 27197,
+    room: '六人房（雙臥室公寓整間）',
+    max: '6 人',
+    checkin: '15:00–21:00', checkout: 'Booking 未註明',
+    travel: '從台北約 1 小時',
+    summary: '在礁溪，離台北近。設施最多：室外泳池、卡拉 OK、室內遊戲區、花園都有，冬天下不了水也有得玩。雙臥室公寓整間住 6 人，可帶寵物但要另付費。剛上架，還沒有住客評價。',
+    pet: true, kitchen: true,
+    extra: '新上架尚無評價；寵物需事先詢問、可能另收費',
+    amenities: '室外游泳池、露台、免費停車、海灘椅／躺椅、卡拉 OK、花園、家庭房、禁菸客房、室內遊戲區、空調',
+    booking: BK('mumulin-mu-mu-lin-yi-lan-jiao-xi-villa'),
+    map: 'https://maps.app.goo.gl/2BMGgRsmQNyFx8ik9',
+  },
+  {
+    id: 'thewus', name: '舒室民宿', short: '舒室',
+    loc: '台南市安平區・安平運河旁',
+    total: 24750,
+    room: '整棟包棟（2 房）',
+    max: '6 人',
+    checkin: '15:00–18:30', checkout: '11:00 前',
+    travel: '從台北約 4 小時',
+    summary: '在安平老街區，走路就能到安平古堡，牛肉湯、小吃都很近，適合邊住邊吃。整棟 2 房住 6 人，有廚房，價格在 9 間裡排第二便宜。不能帶寵物。最晚 18:30 要入住，要先匯訂金。',
+    pet: false, kitchen: true,
+    extra: '需在入住前轉帳預付訂金；入住時要出示證件和信用卡',
+    amenities: '露台、免費停車、公共廚房、家庭房、行李寄存、快速入住／退房、禁菸客房、隔音客房、旅遊諮詢台、空調',
+    booking: BK('the-wus'),
+    map: 'https://maps.app.goo.gl/J6XwSrfq7BrH74bT8',
+  },
+  {
+    id: 'mingyue', name: '明玥居', short: '明玥居',
+    loc: '南投縣國姓鄉・山區',
+    total: 25850,
+    room: '整棟包棟（3 房）',
+    max: '6–8 人（2F 可加床，自帶寢具不加價）',
+    checkin: '15:00–22:00', checkout: '11:00 前',
+    travel: '從台北約 2.5 小時',
+    summary: '9 間裡唯一在深山中，看得到山景，有大陽台和花園，很適合放空。整棟 3 房，空間大，可以加床到 8 人，有室內遊戲區和廚房。不能帶寵物。',
+    pet: false, kitchen: true, mountain: true,
+    extra: '位在山區，建議先採買；2F 高架地板可加床',
+    amenities: '露台、免費停車、遮陽傘、公共廚房、花園、家庭房、快速入住／退房、禁菸客房、室內遊戲區、空調',
+    booking: BK('ming-yue-ju-guo-xing'),
+    map: 'https://maps.app.goo.gl/Vgvx3XFwPJjTfA8r5',
+  },
+  {
+    id: 'chuying', name: '初櫻.見晴花蓮山居', short: '初櫻',
+    loc: '花蓮縣吉安鄉・初英山下',
+    total: 26000,
+    room: '整棟包棟（2 房）',
+    max: '6 人',
+    checkin: '15:00–17:30', checkout: '11:00 前',
+    travel: '從台北約 3 小時',
+    summary: '在花蓮初英山下，三面環山，前面是牧場，很安靜。有免費腳踏車、早餐和每日清潔。整棟 2 房住 6 人。不能帶寵物，也禁止派對，17:30 前就要入住。',
+    pet: false, kitchen: true,
+    extra: '入住截止較早（17:30）；禁止派對',
+    amenities: '露台、免費停車、腳踏車租借、花園、家庭房、行李寄存、快速入住／退房、每日清潔服務、禁菸客房、早餐',
+    booking: BK('chu-ying-jian-qing-hua-lian-shan-ju-min-su'),
+    map: 'https://maps.app.goo.gl/ZsTamU5D7E8ThXJa7',
+  },
+  {
+    id: 'fangman', name: '放慢1館 放慢民宿', short: '放慢',
+    loc: '花蓮縣花蓮市',
+    total: 31050,
+    room: '整棟包棟（開放 3 房）',
+    max: '6–14 人（依人數開放房間）',
+    checkin: '彈性（24 小時）', checkout: '彈性（24 小時）',
+    travel: '從台北約 3 小時',
+    summary: '在花蓮市區，離南濱海灘約 2 公里，只接一組客人，會依人數開放房間，人多也住得下。入住退房時間彈性，有機場接駁和租車服務。可帶寵物（另付費）。入住時要付押金 NT$3,000。',
+    pet: true, kitchen: true,
+    extra: '入住付押金 NT$3,000，無損壞全額退還；禁止派對',
+    amenities: '露台、免費停車、家庭房、快速入住／退房、禁菸客房、租車服務、空調、機場接駁車、免費無線網路',
+    booking: BK('fang-man-min-su'),
+    map: 'https://maps.app.goo.gl/ugFQicEXPKhDkKRL6',
+  },
+  {
+    id: 'shanzhuang', name: '山莊別野', short: '山莊別野',
+    loc: '台南市新化區',
+    total: 32500,
+    room: '整棟包棟（3 房）',
+    max: '8 人',
+    checkin: '15:00–18:00', checkout: '11:00 前',
+    travel: '從台北約 3.5 小時',
+    summary: '在台南新化，看得到山景，有卡拉 OK、花園和公共廚房，適合關起門來自己玩。整棟 3 房最多住 8 人。不能帶寵物，18:00 前要入住。',
+    pet: false, kitchen: true,
+    extra: '入住截止較早（18:00）',
+    amenities: '露台、免費停車、卡拉 OK、公共廚房、花園、行李寄存、快速入住／退房、禁菸客房、空調、免費無線網路',
+    booking: BK('shan-zhuang-bie-shu'),
+    map: 'https://maps.app.goo.gl/jD8US7wzfAf5kuCi9',
+  },
+  {
+    id: 'domo', name: 'DoMo宜蘭', short: 'DoMo',
+    loc: '宜蘭縣員山鄉',
+    total: 32800,
+    room: '整棟包棟（4 房）',
+    max: '10 人',
+    checkin: '16:00 後', checkout: '12:00 前',
+    travel: '從台北約 1 小時',
+    summary: '在宜蘭員山，離台北近。整棟 4 房，房間數最多，最多可住 10 人，有公共廚房。可帶寵物（另付費）。16:00 才能入住，但可以住到中午 12:00。要先匯訂金。',
+    pet: true, kitchen: true,
+    extra: '需在入住前轉帳預付訂金；寵物需事先詢問',
+    amenities: '免費停車、公共廚房、家庭房、禁菸客房、空調、免費無線網路',
+    booking: BK('domoyi-lan'),
+    map: 'https://maps.app.goo.gl/iyN7eAdt4i689EFe8',
+  },
+  {
+    id: 'yuhetian', name: '雨禾田', short: '雨禾田',
+    loc: '宜蘭縣三星鄉',
+    total: 38400,
+    room: '整棟包棟（3 房）',
+    max: '11 人',
+    checkin: '15:00–18:00', checkout: '11:00 前',
+    travel: '從台北約 1 小時 15 分',
+    summary: '9 間裡最貴。在宜蘭三星的田園間，整棟 3 房，Booking 上最多可住 11 人，有露台和廚房。不能帶寵物，也禁止自帶卡式爐、電磁爐。要先匯訂金，18:00 前要入住。',
+    pet: false, kitchen: true,
+    extra: '需在入住前轉帳預付訂金；禁止自帶卡式爐／電磁爐',
+    amenities: '露台、家庭房、禁菸客房、空調、免費無線網路',
+    booking: BK('yu-he-tian'),
+    map: 'https://maps.app.goo.gl/tNuKDqV8sZPcDW9F9',
+  },
+].map(h => ({ ...h, img: `images/${h.id}.jpg`, perNight: h.total / 18 }));
+const HOUSE_IDS = HOUSES.map(h => h.id);
+const HOUSE = Object.fromEntries(HOUSES.map(h => [h.id, h]));
 
 const OTHER = [
   { id: 'nobook', name: '不包棟', desc: '只參加某天或某晚（看下面時段）' },
   { id: 'busy', name: '已有約', desc: '這次都不參加' },
 ];
 const CHOICE_NAME = Object.fromEntries([...HOUSES, ...OTHER].map(c => [c.id, c.name]));
+// 有效排序：剛好 5 間、不重複、都是現有民宿（舊版回覆會被視為需重新排序）
+const isRanking = cs => cs.length === RANK_POINTS.length && new Set(cs).size === cs.length && cs.every(c => HOUSE_IDS.includes(c));
 
 const DAYS = [
   { key: '1231', label: '12/31', wd: '四', parts: ['n'] },
@@ -452,6 +579,7 @@ function renderHouses() {
       el('span', { class: 'tag', text: `最多 ${h.max.split('（')[0]}` }),
       el('span', { class: 'tag ' + (h.kitchen ? 'yes' : 'no'), text: '廚房' }),
       el('span', { class: 'tag ' + (h.pet ? 'yes' : 'no'), text: '寵物' }),
+      h.mountain ? el('span', { class: 'tag', text: '深山中' }) : null,
     );
     // 子元素數量要等於 .house 的 grid-row span（13）
     const rows = [['房型', h.room], ['可住', h.max], ['入住', h.checkin], ['退房', h.checkout], ['開車', h.travel], ['注意', h.extra], ['設施', h.amenities]]
@@ -475,13 +603,24 @@ function renderHouses() {
 
 /* ---------- 表單 ---------- */
 function renderForm() {
-  const opts = $('#choiceOpts');
+  const pick = $('#rankPick');
   for (const h of HOUSES) {
-    opts.append(el('label', { class: 'opt' },
-      el('input', { type: 'checkbox', name: 'choice', value: h.id }),
-      el('span', { class: 't' }, h.name, el('span', { class: 'd', text: `NT$${fmt(Math.round(h.perNight))}/人/晚・${h.loc.split('・')[0]}` }))));
+    pick.append(el('button', { type: 'button', class: 'rk', 'data-id': h.id },
+      el('span', { class: 'no' }),
+      el('span', {}, el('span', { class: 't', text: h.name }),
+        el('span', { class: 'd', text: `NT$${fmt(Math.round(h.perNight))}/人/晚・${h.loc.split('・')[0]}` }))));
   }
-  opts.append(el('div', { class: 'divider' }));
+  pick.addEventListener('click', e => {
+    const b = e.target.closest('.rk');
+    if (!b || b.disabled) return;
+    const id = b.dataset.id;
+    if (ranking.includes(id)) ranking = ranking.filter(x => x !== id);
+    else if (ranking.length < RANK_POINTS.length) ranking.push(id);
+    syncLocks();
+  });
+  $('#rankClear').onclick = () => { ranking = []; syncLocks(); };
+
+  const opts = $('#choiceOpts');
   for (const o of OTHER) {
     opts.append(el('label', { class: 'opt' },
       el('input', { type: 'checkbox', name: 'choice', value: o.id }),
@@ -504,8 +643,10 @@ function renderForm() {
 
   opts.addEventListener('change', e => {
     const v = e.target.value;
-    if (e.target.checked && v === 'nobook') setChecked('choice', HOUSES.map(h => h.id), false);
-    if (e.target.checked && HOUSES.some(h => h.id === v)) setChecked('choice', ['nobook'], false);
+    if (e.target.checked) {
+      ranking = [];
+      setChecked('choice', OTHER.map(o => o.id).filter(x => x !== v), false);
+    }
     if (e.target.checked && v === 'busy') setChecked('slot', ALL_SLOTS, false);
     syncLocks();
   });
@@ -521,16 +662,25 @@ function setChecked(name, values, on) {
 }
 const checkedValues = name => [...document.querySelectorAll(`input[name=${name}]:checked`)].map(i => i.value);
 
+let ranking = []; // 依序的民宿 id，第 1 名在最前面
+
 function syncLocks() {
-  const choices = checkedValues('choice');
-  const busy = choices.includes('busy');
-  const housesPicked = choices.filter(c => HOUSES.some(h => h.id === c)).length;
-  document.querySelectorAll('input[name=choice]').forEach(i => {
-    if (i.value === 'busy') i.disabled = false;
-    else if (busy) { i.checked = false; i.disabled = true; }
-    else if (HOUSES.some(h => h.id === i.value)) i.disabled = !i.checked && housesPicked >= MAX_HOUSES;
-    else i.disabled = false;
+  const other = checkedValues('choice');
+  const busy = other.includes('busy');
+  const optedOut = other.length > 0;
+  const full = ranking.length >= RANK_POINTS.length;
+  document.querySelectorAll('.rk').forEach(b => {
+    const pos = ranking.indexOf(b.dataset.id);
+    b.classList.toggle('on', pos >= 0);
+    b.disabled = closed() || optedOut || (pos < 0 && full);
+    b.setAttribute('aria-pressed', String(pos >= 0));
+    const no = b.querySelector('.no');
+    no.replaceChildren(...(pos >= 0 ? [String(pos + 1), el('small', { text: `${RANK_POINTS[pos]}分` })] : []));
   });
+  const cnt = $('#rankCount');
+  cnt.textContent = optedOut ? '已選擇不參與排序' : full ? `已排好 ${RANK_POINTS.length} 間 ✓` : `已排 ${ranking.length} / ${RANK_POINTS.length} 間`;
+  cnt.className = full && !optedOut ? 'done' : '';
+  $('#rankClear').disabled = optedOut || !ranking.length;
   document.querySelectorAll('input[name=slot]').forEach(i => { i.disabled = busy; if (busy) i.checked = false; });
   $('#slotAll').disabled = $('#slotNone').disabled = busy;
 }
@@ -547,7 +697,8 @@ function prefill() {
   if (!r || prefilledFor === r) return;
   prefilledFor = r;
   $('#count').value = r.count;
-  document.querySelectorAll('input[name=choice]').forEach(i => { i.disabled = false; i.checked = r.choices.includes(i.value); });
+  ranking = isRanking(r.choices) ? [...r.choices] : [];
+  document.querySelectorAll('input[name=choice]').forEach(i => { i.checked = r.choices.includes(i.value); });
   document.querySelectorAll('input[name=slot]').forEach(i => { i.disabled = false; i.checked = r.slots.includes(i.value); });
   $('#message').value = r.message || '';
   syncLocks();
@@ -564,11 +715,12 @@ async function submit(e) {
   if (closed()) return setStatus('已超過填寫截止日', 'err');
   const name = $('#name').value.trim();
   const count = Number($('#count').value);
-  const choices = checkedValues('choice');
+  const other = checkedValues('choice');
+  const choices = other.length ? other : ranking;
   const slots = checkedValues('slot');
   if (!name) { $('#name').focus(); return setStatus('請填名字', 'err'); }
   if (!(Number.isInteger(count) && count >= 1 && count <= 20)) { $('#count').focus(); return setStatus('人數請填 1–20', 'err'); }
-  if (!choices.length) return setStatus('請選擇住宿意願', 'err');
+  if (!other.length && ranking.length !== RANK_POINTS.length) return setStatus(`請依序排出 ${RANK_POINTS.length} 間民宿（或選「不包棟」／「已有約」）`, 'err');
   if (!choices.includes('busy') && !slots.length) return setStatus('請至少勾一個可以的時段（都不行請選「已有約」）', 'err');
 
   const btn = $('#submitBtn');
@@ -610,23 +762,56 @@ function renderResults() {
   const sumPeople = rs => rs.reduce((s, r) => s + r.count, 0);
   $('#resultSub').textContent = `共 ${responses.length} 份回覆、會來的約 ${sumPeople(going)} 人（含同行）。人數均含同行者。`;
 
+  const bar = pct => el('div', { class: 'bar' }, (() => { const i = el('i'); i.style.width = `${pct}%`; return i; })());
+  const who = rs => rs.map(r => r.count > 1 ? `${r.name}+${r.count - 1}` : r.name).join('、') || '—';
+
+  const voters = responses.filter(r => isRanking(r.choices));
+  const stale = responses.filter(r => !isRanking(r.choices) && !r.choices.some(c => OTHER.some(o => o.id === c)));
+  const groups = [
+    { name: '參與排序', rs: voters },
+    ...OTHER.map(o => ({ name: o.name, rs: responses.filter(r => r.choices.includes(o.id)) })),
+  ];
+  if (stale.length) groups.push({ name: '需重新排序', rs: stale });
   const stats = $('#stats');
   stats.replaceChildren();
-  const maxPeople = Math.max(1, ...[...HOUSES, ...OTHER].map(c => sumPeople(responses.filter(r => r.choices.includes(c.id)))));
-  for (const c of [...HOUSES, ...OTHER]) {
-    const rs = responses.filter(r => r.choices.includes(c.id));
-    const n = sumPeople(rs);
+  const maxPeople = Math.max(1, ...groups.map(g => sumPeople(g.rs)));
+  for (const g of groups) {
+    const n = sumPeople(g.rs);
     stats.append(el('div', { class: 'stat' },
-      el('div', { class: 'k', text: c.name }),
+      el('div', { class: 'k', text: g.name }),
       el('div', { class: 'v' }, String(n), el('small', { text: ' 人' })),
-      el('div', { class: 'bar' }, (() => { const i = el('i'); i.style.width = `${n / maxPeople * 100}%`; return i; })()),
-      el('div', { class: 'who', text: rs.map(r => r.count > 1 ? `${r.name}+${r.count - 1}` : r.name).join('、') || '—' }),
+      bar(n / maxPeople * 100),
+      el('div', { class: 'who', text: who(g.rs) }),
     ));
   }
 
+  // 每份排序一票（不乘同行人數）：第 1 名 5 分 … 第 5 名 1 分
+  const score = Object.fromEntries(HOUSE_IDS.map(id => [id, { pts: 0, byPos: RANK_POINTS.map(() => 0) }]));
+  for (const r of voters) r.choices.forEach((id, i) => { score[id].pts += RANK_POINTS[i]; score[id].byPos[i]++; });
+  const order = [...HOUSE_IDS].sort((a, b) => score[b].pts - score[a].pts || score[b].byPos[0] - score[a].byPos[0] || HOUSE_IDS.indexOf(a) - HOUSE_IDS.indexOf(b));
+  const maxPts = Math.max(1, ...order.map(id => score[id].pts));
+  $('#rankHint').textContent = `${voters.length} 人排序・每人一票，不乘同行人數`;
+  const board = $('#rankBoard');
+  board.replaceChildren();
+  let prev = null, pos = 0;
+  order.forEach((id, i) => {
+    const s = score[id];
+    if (!prev || s.pts !== score[prev].pts) pos = i + 1;
+    prev = id;
+    const votes = s.byPos.map((n, k) => n ? `第${k + 1}名 ${n} 票` : null).filter(Boolean).join('・') || '還沒有人投';
+    board.append(el('div', { class: 'brow' + (pos === 1 && s.pts ? ' top' : '') },
+      el('div', { class: 'pos', text: s.pts ? String(pos) : '–' }),
+      el('div', {},
+        el('div', { class: 'nm' }, HOUSE[id].name, el('small', { text: HOUSE[id].loc.split('・')[0] })),
+        bar(s.pts / maxPts * 100),
+        el('div', { class: 'votes', text: votes })),
+      el('div', { class: 'pts' }, String(s.pts), el('small', { text: ' 分' })),
+    ));
+  });
+
   const t = $('#slotTable');
   t.replaceChildren();
-  const head1 = el('tr', {}, el('th', { class: 'l name', rowspan: '2', text: '名字' }), el('th', { rowspan: '2', text: '人數' }), el('th', { class: 'l', rowspan: '2', text: '住宿' }));
+  const head1 = el('tr', {}, el('th', { class: 'l name', rowspan: '2', text: '名字' }), el('th', { rowspan: '2', text: '人數' }), el('th', { class: 'l', rowspan: '2', text: '排序' }));
   const head2 = el('tr');
   for (const d of DAYS) {
     head1.append(el('th', { class: 'day', colspan: String(d.parts.length), text: `${d.label}(${d.wd})` }));
@@ -653,7 +838,11 @@ function renderResults() {
   }
   const sorted = [...responses].sort((a, b) => a.updatedAt < b.updatedAt ? -1 : 1);
   for (const r of sorted) {
-    const pills = el('td', { class: 'l' }, ...r.choices.map(c => el('span', { class: 'pill' + (HOUSES.some(h => h.id === c) ? '' : ' grey'), text: CHOICE_NAME[c] || c })));
+    const pills = el('td', { class: 'l' }, ...(isRanking(r.choices)
+      ? r.choices.map((c, i) => el('span', { class: 'pill', text: `${i + 1}.${HOUSE[c].short}` }))
+      : r.choices.some(c => OTHER.some(o => o.id === c))
+        ? r.choices.map(c => el('span', { class: 'pill grey', text: CHOICE_NAME[c] || c }))
+        : [el('span', { class: 'pill grey', text: '需重新排序' })]));
     const tr = el('tr', {}, el('td', { class: 'l name', text: r.name }), el('td', { text: String(r.count) }), pills);
     for (const s of ALL_SLOTS) {
       tr.append(el('td', { class: s.endsWith('-m') || s === '1231-n' ? 'dl' : '' }, el('span', { class: 'dot' + (r.slots.includes(s) ? ' on' : '') })));
