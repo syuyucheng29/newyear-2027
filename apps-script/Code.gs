@@ -4,7 +4,7 @@
 
 const SHEET_NAME = 'responses';
 const HEADERS = ['name', 'count', 'choices', 'slots', 'message', 'updatedAt'];
-const DEADLINE = new Date('2026-10-31T23:59:59+08:00');
+const DEADLINE = new Date('2026-10-21T23:59:59+08:00');
 const MAX_ROWS = 200; // 防灌爆：超過這個筆數就不收新名字，舊名字仍可修改
 
 const HOUSES = ['shuwu', 'mumulin', 'thewus', 'mingyue', 'chuying', 'fangman', 'shanzhuang', 'domo', 'yuhetian'];

@@ -305,7 +305,7 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
   <p>9 間候選民宿，大家排出最想住的 5 間，再勾一下哪些時段有空。</p>
   <div class="facts">
     <span class="chip">住宿 1/1（五）入住 → 1/4（一）退房，共 3 晚</span>
-    <span class="chip accent" id="deadlineChip">填寫截止 10/31（六）</span>
+    <span class="chip accent" id="deadlineChip">填寫截止 10/21（三）</span>
     <span class="chip">價格查詢日 2026/10/13–14</span>
   </div>
   <nav class="jump">
@@ -318,7 +318,6 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
   <h2>候選民宿</h2>
   <p class="sub">價格為 Booking 上 6 人、3 晚的總價；每人每晚固定以 6 人計算。點照片可看大圖。</p>
   <div class="houses" id="houseList"></div>
-  <div class="note"><b>取消政策：</b>各房型方案的取消／退款條件不同，訂房前請點「Booking」確認當下方案的條件。Booking 上的價格會變動，以實際訂房時為準。</div>
 </section>
 
 <section id="form">
@@ -393,7 +392,7 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align:
 // 部署 Apps Script 後，把網頁應用程式網址貼在這裡（見 README.md）
 const API_URL = 'https://script.google.com/macros/s/AKfycbxJjw1lAW6Lp_UBs3-n4c0AnQESIAOBEFXR9v7gusNt3PrwhkUoiUhwTvHu7fytzG68/exec';
 
-const DEADLINE = new Date('2026-10-31T23:59:59+08:00');
+const DEADLINE = new Date('2026-10-21T23:59:59+08:00');
 const RANK_POINTS = [5, 4, 3, 2, 1]; // 第 1–5 名的分數
 
 const BK = slug => `https://www.booking.com/hotel/tw/${slug}.zh-tw.html?checkin=2027-01-01&checkout=2027-01-04&group_adults=6&group_children=0&no_rooms=1`;
@@ -868,7 +867,7 @@ renderHouses();
 renderForm();
 if (closed()) {
   $('#formBanner').hidden = false;
-  $('#formBanner').textContent = '已超過填寫截止日（10/31），表單已關閉。';
+  $('#formBanner').textContent = '已超過填寫截止日（10/21），表單已關閉。';
   document.querySelectorAll('#survey input, #survey textarea, #survey button').forEach(i => i.disabled = true);
   $('#deadlineChip').textContent = '已截止';
 }
