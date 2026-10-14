@@ -524,9 +524,7 @@ const STAY = Object.fromEntries(STAYS.map(s => [s.id, s]));
 const normalize = r => {
   const busy = r.choices.includes('busy');
   const rank = busy ? [] : r.choices.filter(c => HOUSE_IDS.includes(c)).slice(0, MAX_RANK);
-  // 試算表會把 '0103' 存成數字 103，讀回來要補回前面的 0
-  const rawStay = /^\d{1,4}$/.test(r.stay) ? String(r.stay).padStart(4, '0') : r.stay;
-  const stay = !busy && STAY[rawStay] ? rawStay : '';
+  const stay = !busy && STAY[r.stay] ? r.stay : '';
   return { ...r, busy, rank, stay, ok: busy || (rank.length > 0 && !!stay) };
 };
 
