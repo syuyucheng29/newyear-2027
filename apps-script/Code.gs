@@ -74,7 +74,8 @@ function doPost(e) {
   lock.waitLock(10000);
   try {
     const sheet = getSheet_();
-    const row = [safeText_(name), count, choices.join(','), stay, safeText_(message), new Date()];
+    // stay 前面加 ' 讓試算表存成文字，否則 '0103' 會被轉成數字 103
+    const row = [safeText_(name), count, choices.join(','), stay && "'" + stay, safeText_(message), new Date()];
     const names = sheet.getRange(1, 1, sheet.getLastRow(), 1).getValues().map(r => String(r[0]).trim().toLowerCase());
     const idx = names.indexOf(name.toLowerCase());
     if (idx > 0) sheet.getRange(idx + 1, 1, 1, row.length).setValues([row]);
